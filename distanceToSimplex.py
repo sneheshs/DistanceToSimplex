@@ -1,6 +1,6 @@
 import numpy as np
 from sympy import Matrix
-from frref import frref
+from frref.frref import frref
 
 def distanceToSimplex(point, S):
     '''
