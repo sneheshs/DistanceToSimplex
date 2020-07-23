@@ -26,7 +26,7 @@ def test_multi(svecs):
     points = []
     num_of_items = 5
     for i in range(0, num_of_items):
-        points.append(vecs[0])
+        points.append(vecs[i])
     distances, projections = distancesToSimplex(points, vecs[num_of_items:])
     return distances, projections
 
@@ -79,8 +79,8 @@ def test_case2():
         time_taken['total'] = 0
 
         STARTTIME = time.time()
-        distances, _ = test_multi_onebyone(sv)
-        #print('Simplex Distance One by One', distances)
+        distances_one, _ = test_multi_onebyone(sv)
+        #print('Simplex Distance One by One', distances_one)
         time_taken['total'] = time.time()-STARTTIME
         
         time1.append(time_taken['total'])
@@ -92,21 +92,21 @@ def test_case2():
         time_taken['total'] = 0
 
         STARTTIME = time.time()
-        distances, _ = test_multi(sv)
-        #print('Simplex Distance Multi', distances)
+        distances_multi, _ = test_multi(sv)
+        #print('Simplex Distance Multi', distances_multi)
         time_taken['total'] = time.time()-STARTTIME
         
         time2.append(time_taken['total'])
 
-    return np.mean(time1), np.mean(time2)
+    return np.mean(time1), np.mean(time2), np.array(distances_multi)-np.array(distances_one)
 
 
 t1 = []
 t2 = []
 for repeat in range(0, 100):
-    _t1, _t2 = test_case2()
+    _t1, _t2, _error = test_case2()
     t1.append(_t1)
     t2.append(_t2)
 
-print(np.mean(t1), np.mean(t2))
+print(np.mean(t1), np.mean(t2), _error)
 
