@@ -82,28 +82,29 @@ def distanceToSimplex_single(point, S):
 
     global precomputed_S_values
 
-    n = np.shape(S)[0]  
+    n = np.shape(S)[0]
+    m = np.shape(S)[1]
 
     if n == 1:
         distance = np.linalg.norm(point-S[0])
         projection = np.matrix(S[0]).T
     else:
-        the_key = str(np.shape(S))
-        if not the_key in precomputed_S_values:
-            #print("Computing", the_key)
+        # the_key = str(np.shape(S)) + '--' + str(S[0][0]) + '--' + str(S[-1][-1]) + '--' + str(S[int(n/2)][int(m/2)])
+        # if not the_key in precomputed_S_values:
+        #     print("Computing", the_key, S[-1][-1], S[int(n/2)][int(m/2)])
 
-            translatedS = S-S[0]        
-            A = np.matrix((translatedS[1:])).T
-            _, pivcol = frref(A) # FAST RREF
-            A = A[:, pivcol]
-            top = np.dot(A.T, A)
-            P = np.dot(A, np.dot(np.linalg.inv(np.dot(A.T, A)), A.T)) # P = A*inv(A'*A)*A'
+        translatedS = S-S[0]        
+        A = np.matrix((translatedS[1:])).T
+        _, pivcol = frref(A) # FAST RREF
+        A = A[:, pivcol]
+        top = np.dot(A.T, A)
+        P = np.dot(A, np.dot(np.linalg.inv(np.dot(A.T, A)), A.T)) # P = A*inv(A'*A)*A'
 
-            # Save for later
-            precomputed_S_values[the_key] = A, top, P            
-        else:
-            #print("----- Loading", the_key)
-            A, top, P = precomputed_S_values[the_key]
+        #     # Save for later
+        #     precomputed_S_values[the_key] = A, top, P            
+        # else:
+        #     print("----- Loading", the_key, S[-1][-1], S[int(n/2)][int(m/2)])
+        #     A, top, P = precomputed_S_values[the_key]
 
         b = np.matrix((point-S[0])).T
         bottom = np.dot(A.T, b)
@@ -148,28 +149,29 @@ def distancesToSimplex(points, S):
     projections = []
 
     n = np.shape(S)[0]
+    m = np.shape(S)[1]
 
     if n == 1:
         for point in points:
             distances.append(np.linalg.norm(point-S[0]))
             projections.append(np.matrix(S[0]).T)
     else:
-        the_key = str(np.shape(S))
-        if not the_key in precomputed_S_values:
-            #print("Computing", the_key)
+        # the_key = str(np.shape(S)) + '--' + str(S[0][0]) + '--' + str(S[-1][-1]) + '--' + str(S[int(n/2)][int(m/2)])
+        # if not the_key in precomputed_S_values:
+        #     print("Computing", the_key, S[-1][-1], S[int(n/2)][int(m/2)])
 
-            translatedS = S-S[0]        
-            A = np.matrix((translatedS[1:])).T
-            _, pivcol = frref(A) # FAST RREF
-            A = A[:, pivcol]
-            top = np.dot(A.T, A)
-            P = np.dot(A, np.dot(np.linalg.inv(np.dot(A.T, A)), A.T)) # P = A*inv(A'*A)*A'
+        translatedS = S-S[0]        
+        A = np.matrix((translatedS[1:])).T
+        _, pivcol = frref(A) # FAST RREF
+        A = A[:, pivcol]
+        top = np.dot(A.T, A)
+        P = np.dot(A, np.dot(np.linalg.inv(np.dot(A.T, A)), A.T)) # P = A*inv(A'*A)*A'
 
-            # Save for later
-            precomputed_S_values[the_key] = A, top, P            
-        else:
-            #print("----- Loading", the_key)
-            A, top, P = precomputed_S_values[the_key]
+        #     # Save for later
+        #     precomputed_S_values[the_key] = A, top, P
+        # else:
+        #     print("----- Loading", the_key, S[-1][-1], S[int(n/2)][int(m/2)])
+        #     A, top, P = precomputed_S_values[the_key]
             
         for point in points:                
             b = np.matrix((point-S[0])).T
